@@ -1,6 +1,6 @@
-package com.tqi.kotlinbackenddeveloper2023.repository;
+package com.tqi.kotlinbackenddeveloper2023.domain.repository;
 
-import com.tqi.kotlinbackenddeveloper2023.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -14,5 +14,8 @@ interface CategoryRepository : JpaRepository<Category, Long> {
 
     fun findByNameContaining(name: String): List<Category>
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Category c WHERE c.name = :name")
     fun deleteByName(name: String)
 }

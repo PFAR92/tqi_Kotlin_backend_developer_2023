@@ -1,10 +1,12 @@
-package com.tqi.kotlinbackenddeveloper2023.service.impl
+package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 
-import com.tqi.kotlinbackenddeveloper2023.model.Category
-import com.tqi.kotlinbackenddeveloper2023.repository.CategoryRepository
-import com.tqi.kotlinbackenddeveloper2023.service.ICategoryService
+import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.repository.CategoryRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.service.ICategoryService
+import org.springframework.stereotype.Service
 import java.util.*
 
+@Service
 class CategoryService(private val categoryRepository: CategoryRepository) : ICategoryService {
 
     fun save(category: Category): Category {

@@ -1,6 +1,6 @@
-package com.tqi.kotlinbackenddeveloper2023.service
+package com.tqi.kotlinbackenddeveloper2023.domain.service
 
-import com.tqi.kotlinbackenddeveloper2023.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
 
 interface ICategoryService {
 
