@@ -17,14 +17,14 @@ import java.time.LocalDateTime
 class RestExceptionHandler {
 
     @Autowired
-    private val messageSource: MessageSource? = null
+    private lateinit var messageSource: MessageSource
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handlerValidException(ex: MethodArgumentNotValidException): ResponseEntity<ExceptionDetails> {
         val erros: MutableMap<String, String?> = HashMap()
         ex.bindingResult.allErrors.stream().forEach { erro: ObjectError ->
             val fieldName: String = (erro as FieldError).field
-            val messageError: String? = messageSource?.getMessage(erro, LocaleContextHolder.getLocale())
+            val messageError: String = messageSource.getMessage(erro, LocaleContextHolder.getLocale())
             erros[fieldName] = messageError
         }
         return ResponseEntity(

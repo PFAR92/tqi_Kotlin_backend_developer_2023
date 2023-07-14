@@ -4,5 +4,5 @@ CREATE TABLE product (
     name VARCHAR(255) NOT NULL,
     unit_of_measure VARCHAR(20) NOT NULL,
     unit_price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES category(id)
+    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category(id)
 );

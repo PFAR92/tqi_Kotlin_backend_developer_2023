@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service
 class CategoryService(private val categoryRepository: CategoryRepository) : ICategoryService {
 
     fun save(category: Category): Category {
-        return categoryRepository.findById(category.id).orElse(categoryRepository.save(category))
+        return categoryRepository.findById(category.id).orElseGet {
+            return@orElseGet categoryRepository.save(category)
+        }
     }
 
     override fun alteration(category: Category): Category {
