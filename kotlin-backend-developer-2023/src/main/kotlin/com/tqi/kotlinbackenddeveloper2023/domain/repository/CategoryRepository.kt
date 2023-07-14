@@ -18,4 +18,8 @@ interface CategoryRepository : JpaRepository<Category, Long> {
     @Modifying
     @Query("DELETE FROM Category c WHERE c.name = :name")
     fun deleteByName(name: String)
+
+    @Query("SELECT COUNT(c) > 0 FROM Category c WHERE c.name = :name")
+    fun existsByName(name: String): Boolean
+
 }
