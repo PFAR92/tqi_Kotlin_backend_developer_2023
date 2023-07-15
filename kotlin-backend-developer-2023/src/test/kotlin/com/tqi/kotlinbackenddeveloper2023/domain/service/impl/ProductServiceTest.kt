@@ -37,8 +37,37 @@ class ProductServiceTest {
         verify(productRepository, times(1)).save(buildProduct())
     }
 
+    @Test
+    fun `change should throw exception when product is not found`() {
 
+        `when`(productRepository.findById(buildProduct().id)).thenReturn(Optional.empty())
 
+        Assertions.assertThrows(BusinessException::class.java) {
+            productService.alteration(buildProduct())
+        }
+
+        verify(productRepository, times(1)).findById(buildProduct().id)
+        verify(productRepository, times(0)).save(buildProduct())
+    }
+
+    @Test
+    fun `alteration should return updated product`() {
+
+        val updatedProduct = buildProduct().copy(unitOfMeasure = UnitOfMeasure.CAIXA,
+            unitPrice = BigDecimal.valueOf(21))
+
+        `when`(productRepository.findById(updatedProduct.id)).thenReturn(Optional.of(buildProduct()))
+        `when`(categoryService.save(updatedProduct.category)).thenReturn(updatedProduct.category)
+        `when`(productRepository.save(updatedProduct)).thenReturn(updatedProduct)
+
+        val productAlteration = productService.alteration(updatedProduct)
+
+        Assertions.assertEquals(updatedProduct, productAlteration)
+
+        verify(productRepository, times(1)).findById(updatedProduct.id)
+        verify(productRepository, times(1)).save(updatedProduct)
+
+    }
 
 
 

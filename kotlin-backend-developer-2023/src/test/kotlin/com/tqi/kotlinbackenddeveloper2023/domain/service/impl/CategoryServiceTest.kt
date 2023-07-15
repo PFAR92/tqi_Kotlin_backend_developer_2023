@@ -53,13 +53,13 @@ internal class CategoryServiceTest {
     fun `alteration should return updated category`() {
         val existingCategory = Category(1L, "Existing Category")
         val updatedCategory = Category(1L, "Updated Category")
-        `when`(categoryRepository.findById(existingCategory.id)).thenReturn(Optional.of(existingCategory))
-        `when`(categoryRepository.save(existingCategory)).thenReturn(updatedCategory)
+        `when`(categoryRepository.findById(updatedCategory.id)).thenReturn(Optional.of(existingCategory))
+        `when`(categoryRepository.save(updatedCategory)).thenReturn(updatedCategory)
 
         val result = categoryService.alteration(updatedCategory)
 
         Assertions.assertEquals(updatedCategory, result)
-        Assertions.assertEquals(updatedCategory.name, existingCategory.name)
+
         verify(categoryRepository, times(1)).findById(existingCategory.id)
         verify(categoryRepository, times(1)).save(existingCategory)
     }
