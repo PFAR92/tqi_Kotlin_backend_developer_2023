@@ -26,5 +26,5 @@ data class Product(
 
     @field:DecimalMin(value = "0", inclusive = false)
     @field:Digits(integer = 5, fraction = 2)
-    var UnitPrice: BigDecimal
+    var unitPrice: BigDecimal
 )
