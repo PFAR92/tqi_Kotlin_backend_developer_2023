@@ -8,7 +8,7 @@ import com.tqi.kotlinbackenddeveloper2023.domain.service.IProductService
 class ProductService(
     private val productRepository: ProductRepository,
     private val categoryService: CategoryService
-    ): IProductService {
+) : IProductService {
 
     override fun save(product: Product): Product {
         product.category = categoryService.save(product.category)
@@ -30,14 +30,20 @@ class ProductService(
     }
 
     override fun findAll(): List<Product> {
-        TODO("Not yet implemented")
+        return productRepository.findAll()
     }
 
     override fun findById(id: Long): Product {
-        TODO("Not yet implemented")
+        return productRepository.findById(id).orElseThrow {
+            BusinessException("id $id not found")
+        }
     }
 
     override fun delete(id: Long) {
-        TODO("Not yet implemented")
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id)
+        } else {
+            throw BusinessException("id $id not found")
+        }
     }
 }
