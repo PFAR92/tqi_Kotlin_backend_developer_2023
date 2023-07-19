@@ -3,24 +3,32 @@ package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
 import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.CategoryRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
 import com.tqi.kotlinbackenddeveloper2023.domain.service.ICategoryService
 import org.springframework.stereotype.Service
 
 @Service
-class CategoryService(private val categoryRepository: CategoryRepository) : ICategoryService {
+class CategoryService(
+    private val categoryRepository: CategoryRepository,
+    private val productRepository: ProductRepository
+) : ICategoryService {
 
     fun save(category: Category): Category {
-        return categoryRepository.findById(category.id).orElseGet {
-            return@orElseGet categoryRepository.save(category)
+        return if (categoryRepository.existsByName(category.name)) {
+            categoryRepository.findByName(category.name).get()
+        } else {
+            categoryRepository.save(category)
         }
     }
 
     override fun alteration(category: Category): Category {
-        val existingCategory = categoryRepository.findById(category.id).orElseThrow {
-            throw BusinessException("id ${category.id} not found")
+        val existingCategory = category.id?.let {
+            categoryRepository.findById(it).orElseThrow {
+                throw BusinessException("id ${category.id} not found")
+            }
         }
-        existingCategory.name = category.name
-        return categoryRepository.save(existingCategory)
+        existingCategory?.name = category.name
+        return existingCategory?.let { categoryRepository.save(it) } ?: throw BusinessException("Category not found")
     }
 
     override fun findAll(): List<Category> {
@@ -32,11 +40,16 @@ class CategoryService(private val categoryRepository: CategoryRepository) : ICat
     }
 
     override fun deleteByName(name: String) {
-        if (categoryRepository.existsByName(name)) {
-            categoryRepository.deleteByName(name)
-        } else {
-            throw BusinessException("name: $name not found")
-        }
 
+        if (!productRepository.existsByCategoryName(name)) {
+            if (categoryRepository.existsByName(name)) {
+                categoryRepository.deleteByName(name)
+            } else {
+                throw BusinessException("name: $name not found")
+            }
+
+        } else {
+            throw BusinessException("Cannot delete $name, there are products linked to it, please delete products first")
+        }
     }
 }

@@ -22,4 +22,7 @@ interface CategoryRepository : JpaRepository<Category, Long> {
     @Query("SELECT COUNT(c) > 0 FROM Category c WHERE c.name = :name")
     fun existsByName(name: String): Boolean
 
+
+    fun findByName(name: String): Optional<Category>
+
 }

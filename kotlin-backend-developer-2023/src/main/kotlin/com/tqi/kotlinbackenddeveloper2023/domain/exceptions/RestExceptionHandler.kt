@@ -1,8 +1,5 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.exceptions
 
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.MessageSource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
@@ -16,15 +13,12 @@ import java.time.LocalDateTime
 @RestControllerAdvice
 class RestExceptionHandler {
 
-    @Autowired
-    private lateinit var messageSource: MessageSource
-
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handlerValidException(ex: MethodArgumentNotValidException): ResponseEntity<ExceptionDetails> {
         val erros: MutableMap<String, String?> = HashMap()
         ex.bindingResult.allErrors.stream().forEach { erro: ObjectError ->
             val fieldName: String = (erro as FieldError).field
-            val messageError: String = messageSource.getMessage(erro, LocaleContextHolder.getLocale())
+            val messageError: String? = erro.defaultMessage
             erros[fieldName] = messageError
         }
         return ResponseEntity(

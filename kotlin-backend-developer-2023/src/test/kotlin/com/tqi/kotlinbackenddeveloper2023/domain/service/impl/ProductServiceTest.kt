@@ -28,35 +28,62 @@ class ProductServiceTest {
     @Test
     fun `save must return saved product`() {
 
-        `when`(categoryService.save(buildProduct().category)).thenReturn(buildProduct().category)
-        `when`(productRepository.save(any())).thenReturn(buildProduct())
+        val productToSave = buildProduct(id = 1L)
 
-        val savedProduct = productRepository.save(buildProduct())
+        `when`(productRepository.existsByName(productToSave.name)).thenReturn(false)
+        `when`(categoryService.save(productToSave.category)).thenReturn(productToSave.category)
+        `when`(productRepository.save(productToSave)).thenReturn(productToSave)
 
-        Assertions.assertEquals(buildProduct(), savedProduct)
-        verify(productRepository, times(1)).save(buildProduct())
+        val savedProduct = productService.save(productToSave)
+
+        Assertions.assertEquals(productToSave, savedProduct)
+
+        verify(productRepository, times(1)).existsByName(productToSave.name)
+        verify(productRepository, times(1)).save(productToSave)
+    }
+
+    @Test
+    fun `save should throw an exception when the product already exists`() {
+
+        val productToSave = buildProduct(id = 1L)
+        `when`(productRepository.existsByName(productToSave.name)).thenReturn(true)
+
+        val  exception = Assertions.assertThrows(BusinessException::class.java) {
+            productService.save(productToSave)
+        }
+        val expectedMessage = "Product ${productToSave.name} already exists, cannot save an existing product"
+
+        Assertions.assertEquals(expectedMessage, exception.message)
+        verify(productRepository, times(1)).existsByName(productToSave.name)
+        verify(productRepository, times(0)).save(productToSave)
     }
 
     @Test
     fun `change should throw exception when product is not found`() {
 
-        `when`(productRepository.findById(buildProduct().id)).thenReturn(Optional.empty())
 
-        Assertions.assertThrows(BusinessException::class.java) {
+        `when`(productRepository.findById(1L)).thenReturn(Optional.empty())
+
+        val exception = Assertions.assertThrows(BusinessException::class.java) {
             productService.alteration(buildProduct())
         }
+        val expectedMessage = "id ${buildProduct().id} not found"
 
-        verify(productRepository, times(1)).findById(buildProduct().id)
+        Assertions.assertEquals(expectedMessage, exception.message)
+        verify(productRepository, times(1)).findById(1L)
         verify(productRepository, times(0)).save(buildProduct())
     }
 
     @Test
     fun `alteration should return updated product`() {
 
-        val updatedProduct = buildProduct().copy(unitOfMeasure = UnitOfMeasure.CAIXA,
-            unitPrice = BigDecimal.valueOf(21))
+        val updatedProduct = buildProduct().copy(
+            unitOfMeasure = UnitOfMeasure.CAIXA,
+            unitPrice = BigDecimal.valueOf(21)
+        )
 
-        `when`(productRepository.findById(updatedProduct.id)).thenReturn(Optional.of(buildProduct()))
+        `when`(productRepository.existsByName(buildProduct().name)).thenReturn(false)
+        `when`(productRepository.findById(1L)).thenReturn(Optional.of(buildProduct()))
         `when`(categoryService.save(updatedProduct.category)).thenReturn(updatedProduct.category)
         `when`(productRepository.save(updatedProduct)).thenReturn(updatedProduct)
 
@@ -64,8 +91,31 @@ class ProductServiceTest {
 
         Assertions.assertEquals(updatedProduct, productAlteration)
 
-        verify(productRepository, times(1)).findById(updatedProduct.id)
+        verify(productRepository, times(1)).existsByName(buildProduct().name)
+        verify(productRepository, times(1)).findById(1L)
         verify(productRepository, times(1)).save(updatedProduct)
+
+    }
+
+    @Test
+    fun `trying to duplicate an existing product throws exception`() {
+        val duplicateProduct = buildProduct().copy(
+            id = 2L,
+        )
+        `when`(productRepository.findById(2L)).thenReturn(Optional.of(duplicateProduct))
+        `when`(productRepository.existsByName(duplicateProduct.name)).thenReturn(true)
+        `when`(productRepository.findByName(duplicateProduct.name)).thenReturn(buildProduct())
+
+       val exception = Assertions.assertThrows(BusinessException::class.java) {
+            val productAlteration = productService.alteration(duplicateProduct)
+        }
+
+        val expectedMessage = "there is already a product with name ${duplicateProduct.name} registered, " +
+                "impossible to have a duplicate product"
+
+        Assertions.assertEquals(expectedMessage, expectedMessage)
+        verify(productRepository, times(1)).findById(2L)
+        verify(productRepository, times(0)).save(duplicateProduct)
 
     }
 
@@ -91,65 +141,69 @@ class ProductServiceTest {
 
         `when`(productRepository.findById(any())).thenReturn(Optional.empty())
 
-        Assertions.assertThrows(BusinessException::class.java) {
-            productService.findById(buildProduct().id)
+        val exception = Assertions.assertThrows(BusinessException::class.java) {
+            productService.findById(1L)
         }
+        val expectedMessage = "id 1 not found"
 
-        verify(productRepository, times(1)).findById(buildProduct().id)
+        Assertions.assertEquals(expectedMessage, exception.message)
+        verify(productRepository, times(1)).findById(1L)
     }
 
     @Test
     fun `findById should return the corresponding product`() {
 
-        `when`(productRepository.findById(buildProduct().id)).thenReturn(Optional.of(buildProduct()))
+        `when`(productRepository.findById(1L)).thenReturn(Optional.of(buildProduct()))
 
-        val existsProduct = productService.findById(buildProduct().id)
+        val existsProduct = productService.findById(1L)
 
         Assertions.assertEquals(existsProduct, buildProduct())
 
-        verify(productRepository, times(1)).findById(buildProduct().id)
+        verify(productRepository, times(1)).findById(1L)
     }
 
     @Test
     fun `deleteById should throw exception when product not found`() {
 
-        `when`(productRepository.existsById(buildProduct().id)).thenReturn(false)
+        `when`(productRepository.existsById(1L)).thenReturn(false)
 
-        Assertions.assertThrows(BusinessException::class.java) {
-            productService.delete(buildProduct().id)
+        val exception = Assertions.assertThrows(BusinessException::class.java) {
+            productService.delete(1L)
         }
+        val expectedMessage = "id 1 not found"
 
-        verify(productRepository, times(1)).existsById(buildProduct().id)
-        verify(productRepository, times(0)).deleteById(buildProduct().id)
+        Assertions.assertEquals(expectedMessage, exception.message)
+        verify(productRepository, times(1)).existsById(1L)
+        verify(productRepository, times(0)).deleteById(1L)
     }
 
     @Test
     fun `deleteById should delete product when found`() {
 
-        `when`(productRepository.existsById(buildProduct().id)).thenReturn(true)
+        `when`(productRepository.existsById(1L)).thenReturn(true)
 
-        productService.delete(buildProduct().id)
+        productService.delete(1L)
 
-        verify(productRepository, times(1)).existsById(buildProduct().id)
-        verify(productRepository, times(1)).deleteById(buildProduct().id)
+        verify(productRepository, times(1)).existsById(1L)
+        verify(productRepository, times(1)).deleteById(1L)
     }
 
 
     private fun buildProduct(
         id: Long = 1L,
+        name: String = "Coca Cola",
+        unitOfMeasure: UnitOfMeasure = UnitOfMeasure.UNIDADE,
+        unitPrice: BigDecimal = BigDecimal.valueOf(7.50),
         category: Category = Category(
             1L,
             "BEBIDAS",
-        ),
-        name: String = "Coca Cola",
-        unitOfMeasure: UnitOfMeasure = UnitOfMeasure.UNIDADE,
-        unitPrice: BigDecimal = BigDecimal.valueOf(7.50)
+        )
     ) = Product(
         id = id,
-        category = category,
         name = name,
         unitOfMeasure = unitOfMeasure,
-        unitPrice = unitPrice
+        unitPrice = unitPrice,
+        category = category,
     )
 
 }
