@@ -1,9 +1,11 @@
-package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
+package com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl
 
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
+import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
-import com.tqi.kotlinbackenddeveloper2023.domain.service.IProductService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.product.IProductService
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,27 +25,31 @@ class ProductService(
 
     override fun alteration(product: Product): Product {
 
-        val productAlteration = product.id?.let {
-            productRepository.findById(it).orElseThrow {
+        val categoryThatMayBeExcluded: Category
+
+        val productAlteration = productRepository.findById(product.id).orElseThrow {
                 throw BusinessException("id ${product.id} not found")
             }
-        }
 
-        productAlteration?.apply {
+        productAlteration.apply {
+            categoryThatMayBeExcluded = productAlteration.category
 
             if (productRepository.existsByName(product.name)) {
                 val productCanBeChanged: Product = productRepository.findByName(product.name)
                 if (productCanBeChanged.id != product.id) {
                     throw BusinessException("there is already a product with name ${product.name} registered, impossible to have a duplicate product")
                 }
-            } else {
-                category = categoryService.save(product.category)
-                name = product.name
-                unitOfMeasure = product.unitOfMeasure
-                unitPrice = product.unitPrice
             }
+
+            category = categoryService.save(product.category)
+            name = product.name
+            unitOfMeasure = product.unitOfMeasure
+            unitPrice = product.unitPrice
         }
-        return productAlteration?.let { productRepository.save(it) } ?: throw BusinessException("Product not found")
+        productRepository.save(productAlteration)
+        categoryService.delete(categoryThatMayBeExcluded)
+
+        return productAlteration
     }
 
     override fun findAll(): List<Product> {
@@ -56,11 +62,14 @@ class ProductService(
         }
     }
 
-    override fun delete(id: Long) {
-        if (productRepository.existsById(id)) {
-            productRepository.deleteById(id)
+    override fun delete(product: Product) {
+        if (productRepository.existsById(product.id)) {
+            val deleteProduct = productRepository.findById(product.id)
+            productRepository.delete(deleteProduct.get())
+            categoryService.delete(deleteProduct.get().category)
+
         } else {
-            throw BusinessException("id $id not found")
+            throw BusinessException("id ${product.id} not found")
         }
     }
 }

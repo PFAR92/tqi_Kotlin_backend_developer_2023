@@ -1,4 +1,4 @@
-package com.tqi.kotlinbackenddeveloper2023.domain.service
+package com.tqi.kotlinbackenddeveloper2023.domain.service.product
 
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 
@@ -8,5 +8,5 @@ interface IProductService {
     fun alteration(product: Product): Product
     fun findAll(): List<Product>
     fun findById(id: Long): Product
-    fun delete(id: Long)
+    fun delete(product: Product)
 }

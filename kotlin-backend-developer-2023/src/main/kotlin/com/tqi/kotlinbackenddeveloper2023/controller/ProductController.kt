@@ -3,7 +3,7 @@ package com.tqi.kotlinbackenddeveloper2023.controller
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.product.ProductDto
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.product.ProductUpdateDto
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
-import com.tqi.kotlinbackenddeveloper2023.domain.service.impl.ProductService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl.ProductService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -30,13 +30,13 @@ class ProductController(private val productService: ProductService) {
 
     @GetMapping("/id")
     fun findByIdProduct(@RequestBody product: Product): ResponseEntity<Product> {
-        return ResponseEntity.status(HttpStatus.OK).body(product.id?.let { productService.findById(it) })
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findById(product.id))
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProduct(@RequestBody product: Product) {
-        product.id?.let { productService.delete(it) }
+        productService.delete(product)
     }
 
 }

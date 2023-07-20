@@ -1,12 +1,13 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 
 
-import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
 import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.CategoryRepository
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl.ProductService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -62,107 +63,44 @@ internal class CategoryServiceTest {
         verify(categoryRepository, times(0)).save(category)
     }
 
+
     @Test
-    fun `alteration should return updated category`() {
-        val existingCategory = Category(1L, "Existing Category")
-        val updatedCategory = Category(1L, "Updated Category")
-        `when`(categoryRepository.findById(1L)).thenReturn(Optional.of(existingCategory))
-        `when`(categoryRepository.save(updatedCategory)).thenReturn(updatedCategory)
+    fun `delete should delete the category when found and not associated with a product`() {
 
-        val result = categoryService.alteration(updatedCategory)
+        `when`(productRepository.existsCategoryAssociatedWithTheProduct(buildProduct().category.id)).thenReturn(false)
 
-        Assertions.assertEquals(updatedCategory, result)
+        categoryService.delete(buildProduct().category)
 
-        verify(categoryRepository, times(1)).findById(1L)
-        verify(categoryRepository, times(1)).save(existingCategory)
+        verify(productRepository, times(1)).existsCategoryAssociatedWithTheProduct(buildProduct().id)
+        verify(categoryRepository, times(1)).deleteById(buildProduct().category.id)
     }
 
     @Test
-    fun `alteration should throw exception when category not found`() {
-        val category = Category(1L, "Non-existing Category")
-        `when`(categoryRepository.findById(1L)).thenReturn(Optional.empty())
+    fun `delete must not delete a category that is associated with a product`() {
 
-        Assertions.assertThrows(BusinessException::class.java) {
-            categoryService.alteration(category)
-        }
+        `when`(productRepository.existsCategoryAssociatedWithTheProduct(buildProduct().category.id)).thenReturn(true)
 
-        verify(categoryRepository, times(1)).findById(1L)
-        verify(categoryRepository, times(0)).save(category)
+        categoryService.delete(buildProduct().category)
+
+        verify(productRepository, times(1)).existsCategoryAssociatedWithTheProduct(buildProduct().category.id)
+        verify(categoryRepository, times(0)).deleteById(buildProduct().category.id)
     }
 
-    @Test
-    fun `findAll should return all categories`() {
-        val categories = listOf(
-            Category(1L, "Category 1"), Category(2L, "Category 2"), Category(3L, "Category 3")
+
+    private fun buildProduct(
+        id: Long = 1L,
+        name: String = "Coca Cola",
+        unitOfMeasure: UnitOfMeasure = UnitOfMeasure.UNIDADE,
+        unitPrice: BigDecimal = BigDecimal.valueOf(7.50),
+        category: Category = Category(
+            1L,
+            "BEBIDAS",
         )
-        `when`(categoryRepository.findAll()).thenReturn(categories)
-
-        val result = categoryService.findAll()
-
-        Assertions.assertEquals(categories, result)
-        verify(categoryRepository, times(1)).findAll()
-    }
-
-    @Test
-    fun `findByName should return matching categories`() {
-        val searchName = "Category"
-        val categories = listOf(
-            Category(1L, "Category 1"), Category(2L, "Category 2"), Category(3L, "Category 3")
-        )
-        `when`(categoryRepository.findByNameContaining(searchName)).thenReturn(categories)
-
-        val result = categoryService.findByName(searchName)
-
-        Assertions.assertEquals(categories, result)
-        verify(categoryRepository, times(1)).findByNameContaining(searchName)
-    }
-
-    @Test
-    fun `deleteByName should delete category when found`() {
-        val categoryName = "Category"
-        `when`(productRepository.existsByCategoryName(categoryName)).thenReturn(false)
-        `when`(categoryRepository.existsByName(categoryName)).thenReturn(true)
-
-        categoryService.deleteByName(categoryName)
-
-        verify(productRepository, times(1)).existsByCategoryName(categoryName)
-        verify(categoryRepository, times(1)).existsByName(categoryName)
-        verify(categoryRepository, times(1)).deleteByName(categoryName)
-    }
-
-    @Test
-    fun `deleteByName should throw exception when category not found`() {
-        val categoryName = "Non-existing Category"
-
-        `when`(productRepository.existsByCategoryName(categoryName)).thenReturn(false)
-        `when`(categoryRepository.existsByName(categoryName)).thenReturn(false)
-
-        Assertions.assertThrows(BusinessException::class.java) {
-            categoryService.deleteByName(categoryName)
-        }
-
-        verify(productRepository, times(1)).existsByCategoryName(categoryName)
-        verify(categoryRepository, times(1)).existsByName(categoryName)
-        verify(categoryRepository, times(0)).deleteByName(categoryName)
-    }
-
-    @Test
-    fun `deleteByName should throw exception when category is associated with a product`() {
-
-
-        val category = Category(1L, "Bebidas")
-        val product = Product(
-            1L, "Coca Cola", UnitOfMeasure.UNIDADE, BigDecimal.valueOf(7.50), category
-        )
-
-        `when`(productRepository.existsByCategoryName(category.name)).thenReturn(true)
-
-        Assertions.assertThrows(BusinessException::class.java) {
-            categoryService.deleteByName(category.name)
-        }
-
-        verify(productRepository, times(1)).existsByCategoryName(category.name)
-        verify(categoryRepository, times(0)).deleteByName(category.name)
-
-    }
+    ) = Product(
+        id = id,
+        name = name,
+        unitOfMeasure = unitOfMeasure,
+        unitPrice = unitPrice,
+        category = category,
+    )
 }

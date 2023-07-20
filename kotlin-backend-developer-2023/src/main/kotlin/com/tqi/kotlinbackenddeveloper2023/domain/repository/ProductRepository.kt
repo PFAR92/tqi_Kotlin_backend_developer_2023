@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProductRepository : JpaRepository<Product, Long> {
 
-    @Query("SELECT COUNT(p) > 0 FROM Product p WHERE p.category.name = :name")
-    fun existsByCategoryName(name: String): Boolean
+    @Query("SELECT COUNT(p) > 0 FROM Product p WHERE p.category.id = :categoryId")
+    fun existsCategoryAssociatedWithTheProduct(categoryId: Long): Boolean
 
 
     fun existsByName(name: String): Boolean

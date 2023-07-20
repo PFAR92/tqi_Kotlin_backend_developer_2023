@@ -5,6 +5,8 @@ import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl.ProductService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -168,7 +170,7 @@ class ProductServiceTest {
         `when`(productRepository.existsById(1L)).thenReturn(false)
 
         val exception = Assertions.assertThrows(BusinessException::class.java) {
-            productService.delete(1L)
+            productService.delete(buildProduct())
         }
         val expectedMessage = "id 1 not found"
 
@@ -181,11 +183,13 @@ class ProductServiceTest {
     fun `deleteById should delete product when found`() {
 
         `when`(productRepository.existsById(1L)).thenReturn(true)
+        `when`(productRepository.findById(1L)).thenReturn(Optional.of(buildProduct()))
 
-        productService.delete(1L)
+        productService.delete(buildProduct())
 
         verify(productRepository, times(1)).existsById(1L)
-        verify(productRepository, times(1)).deleteById(1L)
+        verify(productRepository, times(1)).findById(1L)
+        verify(productRepository, times(1)).delete(buildProduct())
     }
 
 
