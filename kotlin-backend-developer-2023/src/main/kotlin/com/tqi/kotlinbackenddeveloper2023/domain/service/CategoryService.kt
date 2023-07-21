@@ -1,6 +1,6 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.service
 
-import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.CategoryRepository
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
 import org.springframework.stereotype.Service

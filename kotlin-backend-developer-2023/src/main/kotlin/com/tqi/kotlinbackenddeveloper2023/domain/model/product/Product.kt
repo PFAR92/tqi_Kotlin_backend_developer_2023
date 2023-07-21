@@ -1,6 +1,6 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.model.product
 
-import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import jakarta.persistence.*
 import java.math.BigDecimal
 

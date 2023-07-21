@@ -1,7 +1,7 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl
 
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
-import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
 import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService

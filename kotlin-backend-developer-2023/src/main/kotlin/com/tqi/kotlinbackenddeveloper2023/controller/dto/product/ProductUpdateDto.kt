@@ -1,6 +1,6 @@
 package com.tqi.kotlinbackenddeveloper2023.controller.dto.product
 
-import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
 import jakarta.validation.constraints.*

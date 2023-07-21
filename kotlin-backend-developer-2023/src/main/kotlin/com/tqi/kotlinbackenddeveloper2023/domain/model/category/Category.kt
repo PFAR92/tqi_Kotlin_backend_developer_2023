@@ -1,4 +1,4 @@
-package com.tqi.kotlinbackenddeveloper2023.domain.model
+package com.tqi.kotlinbackenddeveloper2023.domain.model.category
 
 import jakarta.persistence.*
 
