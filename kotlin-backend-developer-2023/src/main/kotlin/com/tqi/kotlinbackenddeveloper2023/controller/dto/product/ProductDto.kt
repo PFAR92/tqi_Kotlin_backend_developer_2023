@@ -11,20 +11,20 @@ import java.math.BigDecimal
 
 data class ProductDto(
     @field:NotBlank(message = "this field is mandatory")
-    var name: String,
+    var name: String = "",
 
     @field:Pattern(
         regexp = "^(UNIDADE|QUILOGRAMA|LITRO|CAIXA)$",
         message = "fill options available (UNIDADE, QUILOGRAMA, LITRO, CAIXA)"
     )
-    var unitOfMeasure: String,
+    var unitOfMeasure: String = "",
 
     @field:DecimalMin(value = "0", inclusive = false, message = "Price cannot be zero or less")
     @field:Digits(integer = 5, fraction = 2, message = "Enter a valid numeric value with up to two decimal places")
-    var unitPrice: BigDecimal,
+    var unitPrice: BigDecimal = BigDecimal.ZERO,
 
     @field:NotBlank(message = "this field is mandatory")
-    var category: String
+    var category: String = ""
 ) {
     fun toEntity() = Product(
         name = this.name,

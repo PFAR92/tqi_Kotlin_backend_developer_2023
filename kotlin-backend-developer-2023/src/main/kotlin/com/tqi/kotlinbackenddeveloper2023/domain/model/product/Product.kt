@@ -10,14 +10,14 @@ data class Product(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    var name: String = "",
+    var name: String,
 
     @field:Enumerated(EnumType.STRING)
-    var unitOfMeasure: UnitOfMeasure = UnitOfMeasure.UNIDADE,
+    var unitOfMeasure: UnitOfMeasure,
 
-    var unitPrice: BigDecimal = BigDecimal.valueOf(0),
+    var unitPrice: BigDecimal,
 
     @ManyToOne
     @Embedded
-    var category: Category = Category()
+    var category: Category
 )

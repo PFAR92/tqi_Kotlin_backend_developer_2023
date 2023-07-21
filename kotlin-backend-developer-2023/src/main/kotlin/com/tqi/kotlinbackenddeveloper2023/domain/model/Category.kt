@@ -10,6 +10,6 @@ data class Category(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    var name: String = ""
+    var name: String
 
 )
