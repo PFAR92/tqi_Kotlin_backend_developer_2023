@@ -3,7 +3,7 @@ package com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
-import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.repository.product.ProductRepository
 import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
 import com.tqi.kotlinbackenddeveloper2023.domain.service.product.IProductService
 import org.springframework.stereotype.Service
@@ -35,7 +35,7 @@ class ProductService(
             categoryThatMayBeExcluded = productAlteration.category
 
             if (productRepository.existsByName(product.name)) {
-                val productCanBeChanged: Product = productRepository.findByName(product.name)
+                val productCanBeChanged: Product = productRepository.findByName(product.name).get()
                 if (productCanBeChanged.id != product.id) {
                     throw BusinessException("there is already a product with name ${product.name} registered, impossible to have a duplicate product")
                 }

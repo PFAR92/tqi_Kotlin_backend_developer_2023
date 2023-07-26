@@ -4,7 +4,7 @@ import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
-import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.repository.product.ProductRepository
 import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
 import com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl.ProductService
 import org.junit.jupiter.api.Assertions
@@ -106,7 +106,7 @@ class ProductServiceTest {
         )
         `when`(productRepository.findById(2L)).thenReturn(Optional.of(duplicateProduct))
         `when`(productRepository.existsByName(duplicateProduct.name)).thenReturn(true)
-        `when`(productRepository.findByName(duplicateProduct.name)).thenReturn(buildProduct())
+        `when`(productRepository.findByName(duplicateProduct.name)).thenReturn(Optional.of(buildProduct()))
 
        val exception = Assertions.assertThrows(BusinessException::class.java) {
             val productAlteration = productService.alteration(duplicateProduct)

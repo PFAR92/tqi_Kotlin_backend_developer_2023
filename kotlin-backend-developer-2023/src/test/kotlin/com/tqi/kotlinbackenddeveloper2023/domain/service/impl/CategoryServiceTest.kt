@@ -4,8 +4,8 @@ package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
-import com.tqi.kotlinbackenddeveloper2023.domain.repository.CategoryRepository
-import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.repository.category.CategoryRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.repository.product.ProductRepository
 import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
 import com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl.ProductService
 import org.junit.jupiter.api.Assertions
