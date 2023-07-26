@@ -19,7 +19,7 @@ class ShoppingCartService(
     private val productRepository: ProductRepository
 ): IShoppingCart {
 
-    override fun save(product: ProductsPlacedInTheCart): ShoppingCart {
+    override fun addProductToCart(product: ProductsPlacedInTheCart): ShoppingCart {
 
         val shoppingCart = shoppingCartRepository.findById(1L).orElseGet {
             shoppingCartRepository.save(ShoppingCart(1L, mutableListOf()))
@@ -35,6 +35,7 @@ class ShoppingCartService(
             shoppingCart.listProductsPlacedInTheCart.remove(existingProduct)
             existingProduct.quantity += product.quantity
             existingProduct.price = existingProduct.product.unitPrice.multiply(existingProduct.quantity.toBigDecimal())
+            productsPlacedInTheCartRepository.save(existingProduct)
             shoppingCart.listProductsPlacedInTheCart.add(existingProduct)
         } else {
             product.product = productToBeInserted
@@ -46,12 +47,25 @@ class ShoppingCartService(
         return shoppingCartRepository.save(shoppingCart)
     }
 
-    override fun alteration(product: ProductsPlacedInTheCart): ShoppingCart {
-        TODO("Not yet implemented")
-    }
+    override fun changeTheQuantityOfTheProduct(product: ProductsPlacedInTheCart): ShoppingCart {
+        val shoppingCart = shoppingCartRepository.findById(1L).orElseThrow {
+            throw BusinessException("Cart is empty, there are no products to update")
+        }
+        val existingProduct = shoppingCart.listProductsPlacedInTheCart.find { it.product.name == product.product.name }
+            ?: throw BusinessException("There is no such product in the cart, please add it first before changing the quantity")
 
-    override fun deleteProduct(product: ProductsPlacedInTheCart): ShoppingCart {
-        TODO("Not yet implemented")
+        if (product.quantity == 0) {
+            shoppingCart.listProductsPlacedInTheCart.remove(existingProduct)
+            productsPlacedInTheCartRepository.deleteById(existingProduct.id)
+        } else {
+            shoppingCart.listProductsPlacedInTheCart.remove(existingProduct)
+            existingProduct.quantity = product.quantity
+            existingProduct.price = existingProduct.product.unitPrice.multiply(product.quantity.toBigDecimal())
+            productsPlacedInTheCartRepository.save(existingProduct)
+            shoppingCart.listProductsPlacedInTheCart.add(existingProduct)
+        }
+
+        return shoppingCartRepository.save(shoppingCart)
     }
 
     override fun findShoppingCart(): ShoppingCart {

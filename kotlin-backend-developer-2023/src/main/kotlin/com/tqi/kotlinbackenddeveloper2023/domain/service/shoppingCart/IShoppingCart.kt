@@ -5,8 +5,7 @@ import com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart.ShoppingCart
 
 interface IShoppingCart {
 
-    fun save(product: ProductsPlacedInTheCart): ShoppingCart
-    fun alteration(product: ProductsPlacedInTheCart): ShoppingCart
-    fun deleteProduct(product: ProductsPlacedInTheCart): ShoppingCart
+    fun addProductToCart(product: ProductsPlacedInTheCart): ShoppingCart
+    fun changeTheQuantityOfTheProduct(product: ProductsPlacedInTheCart): ShoppingCart
     fun findShoppingCart(): ShoppingCart
 }
