@@ -28,8 +28,8 @@ class ProductService(
         val categoryThatMayBeExcluded: Category
 
         val productAlteration = productRepository.findById(product.id).orElseThrow {
-                throw BusinessException("id ${product.id} not found")
-            }
+            throw BusinessException("id ${product.id} not found")
+        }
 
         productAlteration.apply {
             categoryThatMayBeExcluded = productAlteration.category

@@ -50,7 +50,7 @@ class ProductServiceTest {
         val productToSave = buildProduct(id = 1L)
         `when`(productRepository.existsByName(productToSave.name)).thenReturn(true)
 
-        val  exception = Assertions.assertThrows(BusinessException::class.java) {
+        val exception = Assertions.assertThrows(BusinessException::class.java) {
             productService.save(productToSave)
         }
         val expectedMessage = "Product ${productToSave.name} already exists, cannot save an existing product"
@@ -108,7 +108,7 @@ class ProductServiceTest {
         `when`(productRepository.existsByName(duplicateProduct.name)).thenReturn(true)
         `when`(productRepository.findByName(duplicateProduct.name)).thenReturn(Optional.of(buildProduct()))
 
-       val exception = Assertions.assertThrows(BusinessException::class.java) {
+        val exception = Assertions.assertThrows(BusinessException::class.java) {
             val productAlteration = productService.alteration(duplicateProduct)
         }
 

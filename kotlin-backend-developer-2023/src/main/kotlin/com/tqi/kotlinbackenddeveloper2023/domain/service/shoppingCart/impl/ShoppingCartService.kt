@@ -9,7 +9,6 @@ import com.tqi.kotlinbackenddeveloper2023.domain.repository.shoppingCart.Shoppin
 import com.tqi.kotlinbackenddeveloper2023.domain.service.shoppingCart.IShoppingCart
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
 
 @Service
 @Transactional
@@ -17,7 +16,7 @@ class ShoppingCartService(
     private val shoppingCartRepository: ShoppingCartRepository,
     private val productsPlacedInTheCartRepository: ProductsPlacedInTheCartRepository,
     private val productRepository: ProductRepository
-): IShoppingCart {
+) : IShoppingCart {
 
     override fun addProductToCart(product: ProductsPlacedInTheCart): ShoppingCart {
 
@@ -26,8 +25,10 @@ class ShoppingCartService(
         }
 
         val productToBeInserted = productRepository.findByName(product.product.name).orElseThrow {
-            throw BusinessException("The product entered does not exist, please check that it was entered correctly " +
-                    "or add the product to stock")
+            throw BusinessException(
+                "The product entered does not exist, please check that it was entered correctly " +
+                        "or add the product to stock"
+            )
         }
 
         val existingProduct = shoppingCart.listProductsPlacedInTheCart.find { it.product.id == productToBeInserted.id }

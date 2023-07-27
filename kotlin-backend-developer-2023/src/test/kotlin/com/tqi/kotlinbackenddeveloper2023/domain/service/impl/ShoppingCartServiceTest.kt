@@ -30,7 +30,8 @@ class ShoppingCartServiceTest {
         shoppingCartRepository = mock(ShoppingCartRepository::class.java)
         productsPlacedInTheCartRepository = mock(ProductsPlacedInTheCartRepository::class.java)
         productRepository = mock(ProductRepository::class.java)
-        shoppingCartService = ShoppingCartService(shoppingCartRepository, productsPlacedInTheCartRepository, productRepository)
+        shoppingCartService =
+            ShoppingCartService(shoppingCartRepository, productsPlacedInTheCartRepository, productRepository)
     }
 
     @Test
@@ -73,7 +74,11 @@ class ShoppingCartServiceTest {
         val shoppingCart = buildShoppingCart(1L, mutableListOf(buildProductInCart()))
 
         `when`(shoppingCartRepository.findById(1L)).thenReturn(Optional.of(shoppingCart))
-        `when`(productRepository.findByName(buildProductInCart().product.name)).thenReturn(Optional.of(buildProductInCart().product))
+        `when`(productRepository.findByName(buildProductInCart().product.name)).thenReturn(
+            Optional.of(
+                buildProductInCart().product
+            )
+        )
         `when`(shoppingCartRepository.save(any())).thenReturn(shoppingCart)
 
 
@@ -90,7 +95,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    fun`Exception is thrown when trying to update product from an empty cart`() {
+    fun `Exception is thrown when trying to update product from an empty cart`() {
 
         `when`(shoppingCartRepository.findById(1L)).thenReturn(Optional.empty())
 
@@ -149,7 +154,11 @@ class ShoppingCartServiceTest {
         val shoppingCart = buildShoppingCart(1L, mutableListOf(buildProductInCart()))
 
         `when`(shoppingCartRepository.findById(1L)).thenReturn(Optional.of(shoppingCart))
-        `when`(productRepository.findByName(buildProductInCart().product.name)).thenReturn(Optional.of(buildProductInCart().product))
+        `when`(productRepository.findByName(buildProductInCart().product.name)).thenReturn(
+            Optional.of(
+                buildProductInCart().product
+            )
+        )
         `when`(shoppingCartRepository.save(any())).thenReturn(shoppingCart)
 
         val updatedShoppingCart = shoppingCartService.changeTheQuantityOfTheProduct(updateProduct)
@@ -185,7 +194,7 @@ class ShoppingCartServiceTest {
     }
 
 
-    private fun buildProductInCart (
+    private fun buildProductInCart(
         id: Long = 1L,
         shoppingCart: ShoppingCart = ShoppingCart(1L, mutableListOf<ProductsPlacedInTheCart>()),
         product: Product = Product(

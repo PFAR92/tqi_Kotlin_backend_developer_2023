@@ -1,8 +1,8 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart
 
-import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
-import jakarta.persistence.*
-import java.math.BigDecimal
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 
 @Entity
 data class ShoppingCart(
@@ -13,4 +13,4 @@ data class ShoppingCart(
     @OneToMany(mappedBy = "shoppingCart")
     var listProductsPlacedInTheCart: MutableList<ProductsPlacedInTheCart>,
 
-)
+    )

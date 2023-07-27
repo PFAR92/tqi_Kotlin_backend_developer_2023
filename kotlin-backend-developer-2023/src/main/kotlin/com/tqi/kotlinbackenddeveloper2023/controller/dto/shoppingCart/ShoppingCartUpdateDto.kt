@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 
-class ShoppingCartUpdateDto(
+data class ShoppingCartUpdateDto(
 
     @field:NotBlank(message = "this field is mandatory")
     val product: String = "",
