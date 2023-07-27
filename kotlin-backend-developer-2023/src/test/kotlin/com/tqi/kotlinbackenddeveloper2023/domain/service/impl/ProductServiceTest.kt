@@ -1,10 +1,12 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
-import com.tqi.kotlinbackenddeveloper2023.domain.model.Category
+import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
-import com.tqi.kotlinbackenddeveloper2023.domain.repository.ProductRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.repository.product.ProductRepository
+import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl.ProductService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,7 +50,7 @@ class ProductServiceTest {
         val productToSave = buildProduct(id = 1L)
         `when`(productRepository.existsByName(productToSave.name)).thenReturn(true)
 
-        val  exception = Assertions.assertThrows(BusinessException::class.java) {
+        val exception = Assertions.assertThrows(BusinessException::class.java) {
             productService.save(productToSave)
         }
         val expectedMessage = "Product ${productToSave.name} already exists, cannot save an existing product"
@@ -104,9 +106,9 @@ class ProductServiceTest {
         )
         `when`(productRepository.findById(2L)).thenReturn(Optional.of(duplicateProduct))
         `when`(productRepository.existsByName(duplicateProduct.name)).thenReturn(true)
-        `when`(productRepository.findByName(duplicateProduct.name)).thenReturn(buildProduct())
+        `when`(productRepository.findByName(duplicateProduct.name)).thenReturn(Optional.of(buildProduct()))
 
-       val exception = Assertions.assertThrows(BusinessException::class.java) {
+        val exception = Assertions.assertThrows(BusinessException::class.java) {
             val productAlteration = productService.alteration(duplicateProduct)
         }
 
@@ -168,7 +170,7 @@ class ProductServiceTest {
         `when`(productRepository.existsById(1L)).thenReturn(false)
 
         val exception = Assertions.assertThrows(BusinessException::class.java) {
-            productService.delete(1L)
+            productService.delete(buildProduct())
         }
         val expectedMessage = "id 1 not found"
 
@@ -181,11 +183,13 @@ class ProductServiceTest {
     fun `deleteById should delete product when found`() {
 
         `when`(productRepository.existsById(1L)).thenReturn(true)
+        `when`(productRepository.findById(1L)).thenReturn(Optional.of(buildProduct()))
 
-        productService.delete(1L)
+        productService.delete(buildProduct())
 
         verify(productRepository, times(1)).existsById(1L)
-        verify(productRepository, times(1)).deleteById(1L)
+        verify(productRepository, times(1)).findById(1L)
+        verify(productRepository, times(1)).delete(buildProduct())
     }
 
 
