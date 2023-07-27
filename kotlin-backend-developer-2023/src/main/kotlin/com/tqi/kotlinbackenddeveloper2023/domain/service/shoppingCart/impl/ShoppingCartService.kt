@@ -9,6 +9,7 @@ import com.tqi.kotlinbackenddeveloper2023.domain.repository.shoppingCart.Shoppin
 import com.tqi.kotlinbackenddeveloper2023.domain.service.shoppingCart.IShoppingCart
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 @Transactional
@@ -21,7 +22,7 @@ class ShoppingCartService(
     override fun addProductToCart(product: ProductsPlacedInTheCart): ShoppingCart {
 
         val shoppingCart = shoppingCartRepository.findById(1L).orElseGet {
-            shoppingCartRepository.save(ShoppingCart(1L, mutableListOf()))
+            shoppingCartRepository.save(ShoppingCart(1L, BigDecimal.ZERO, mutableListOf()))
         }
 
         val productToBeInserted = productRepository.findByName(product.product.name).orElseThrow {
@@ -45,6 +46,12 @@ class ShoppingCartService(
             shoppingCart.listProductsPlacedInTheCart.add(product)
         }
 
+        var cartValue = BigDecimal.ZERO
+        for (productInCart in shoppingCart.listProductsPlacedInTheCart) {
+            cartValue += productInCart.price
+        }
+        shoppingCart.cartValue = cartValue
+
         return shoppingCartRepository.save(shoppingCart)
     }
 
@@ -65,6 +72,12 @@ class ShoppingCartService(
             productsPlacedInTheCartRepository.save(existingProduct)
             shoppingCart.listProductsPlacedInTheCart.add(existingProduct)
         }
+
+        var cartValue = BigDecimal.ZERO
+        for (productInCart in shoppingCart.listProductsPlacedInTheCart) {
+            cartValue += productInCart.price
+        }
+        shoppingCart.cartValue = cartValue
 
         return shoppingCartRepository.save(shoppingCart)
     }

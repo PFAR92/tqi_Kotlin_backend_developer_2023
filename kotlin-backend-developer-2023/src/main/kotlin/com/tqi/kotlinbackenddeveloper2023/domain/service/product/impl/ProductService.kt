@@ -4,7 +4,7 @@ import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.product.ProductRepository
-import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.category.CategoryService
 import com.tqi.kotlinbackenddeveloper2023.domain.service.product.IProductService
 import org.springframework.stereotype.Service
 

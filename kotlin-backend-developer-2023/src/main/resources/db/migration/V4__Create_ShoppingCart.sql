@@ -1,5 +1,6 @@
 CREATE TABLE shopping_cart (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    cart_value DECIMAL(10, 2) DEFAULT 0.00 NOT NULL
 );
 
 CREATE TABLE products_placed_in_the_cart (
