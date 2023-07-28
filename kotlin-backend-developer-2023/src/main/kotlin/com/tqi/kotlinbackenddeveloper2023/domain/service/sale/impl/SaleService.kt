@@ -53,8 +53,6 @@ class SaleService(
         shoppingCartRepository.deleteById(1L)
         proofOfSaleRepository.save(savedProofOfSale)
 
-
-
         return savedProofOfSale
     }
 
@@ -63,10 +61,16 @@ class SaleService(
     }
 
     override fun findVoucherById(id: Long): ProofOfSale {
-        TODO("Not yet implemented")
+        return proofOfSaleRepository.findById(id).orElseThrow {
+            throw BusinessException("id $id not found")
+        }
     }
 
     override fun deleteReceiptById(id: Long) {
-        TODO("Not yet implemented")
+
+        val proofOfSale = proofOfSaleRepository.findById(id).orElseThrow {
+            BusinessException("id $id not found")
+        }
+        proofOfSaleRepository.delete(proofOfSale)
     }
 }

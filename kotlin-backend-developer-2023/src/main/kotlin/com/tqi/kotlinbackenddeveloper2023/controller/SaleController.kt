@@ -1,6 +1,7 @@
 package com.tqi.kotlinbackenddeveloper2023.controller
 
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.sale.CompletedSaleView
+import com.tqi.kotlinbackenddeveloper2023.controller.dto.sale.ProofOfSaleDtoFindId
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.sale.ProofOfSaleView
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.sale.SaleDto
 import com.tqi.kotlinbackenddeveloper2023.domain.model.sale.proofOfSale.ProofOfSale
@@ -28,5 +29,17 @@ class SaleController(
         val listProofOfSale = saleService.showReceipts().stream()
             .map { proofOfSale: ProofOfSale -> ProofOfSaleView(proofOfSale) }.collect(Collectors.toList())
         return ResponseEntity.status(HttpStatus.OK).body(listProofOfSale)
+    }
+
+    @GetMapping("id")
+    fun findVoucherById(@RequestBody @Valid proofOfSale: ProofOfSaleDtoFindId): ResponseEntity<ProofOfSaleView> {
+        val voucher = saleService.findVoucherById(proofOfSale.id)
+        return ResponseEntity.status(HttpStatus.OK).body(ProofOfSaleView(voucher))
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteReceiptById(@RequestBody @Valid proofOfSale: ProofOfSaleDtoFindId) {
+        saleService.deleteReceiptById(proofOfSale.id)
     }
 }

@@ -61,6 +61,13 @@ class ShoppingCartServiceTest {
 
         val productInTheCarSave = shoppingCartService.addProductToCart(productInTheCart)
 
+        var cartValues = BigDecimal.ZERO
+        for (product in productInTheCarSave.listProductsPlacedInTheCart) {
+            cartValues += product.price
+        }
+
+        Assertions.assertEquals(productInTheCarSave.cartValue, cartValues)
+
         verify(productsPlacedInTheCartRepository, times(1)).save(productInTheCart)
         verify(shoppingCartRepository, times(1)).save(productInTheCart.shoppingCart)
 
