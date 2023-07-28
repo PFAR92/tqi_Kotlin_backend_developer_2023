@@ -2,7 +2,6 @@ package com.tqi.kotlinbackenddeveloper2023.controller.dto.shoppingCart
 
 import com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart.ProductsPlacedInTheCart
 import com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart.ShoppingCart
-import java.math.BigDecimal
 import java.util.stream.Collectors
 
 data class ShoppingCartView(

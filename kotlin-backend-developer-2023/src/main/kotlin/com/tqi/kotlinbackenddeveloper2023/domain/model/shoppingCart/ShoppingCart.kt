@@ -15,4 +15,4 @@ data class ShoppingCart(
 
     @OneToMany(mappedBy = "shoppingCart")
     var listProductsPlacedInTheCart: MutableList<ProductsPlacedInTheCart>,
-    )
+)

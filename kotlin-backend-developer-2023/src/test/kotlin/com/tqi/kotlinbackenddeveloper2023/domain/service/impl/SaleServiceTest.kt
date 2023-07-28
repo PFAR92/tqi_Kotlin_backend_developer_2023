@@ -1,8 +1,6 @@
 package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
-import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
-import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
 import com.tqi.kotlinbackenddeveloper2023.domain.model.sale.PaymentOptions
 import com.tqi.kotlinbackenddeveloper2023.domain.model.sale.Sale
 import com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart.ProductsPlacedInTheCart

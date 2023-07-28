@@ -1,7 +1,6 @@
 package com.tqi.kotlinbackenddeveloper2023.controller.dto.product
 
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
-import java.math.BigDecimal
 
 data class ProductView(
 

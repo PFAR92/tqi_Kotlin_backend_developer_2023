@@ -14,11 +14,11 @@ data class ProofOfSaleView(
     val products: MutableList<VoucherProductView>
 ) {
     constructor(proofOfSale: ProofOfSale) : this(
-    id = proofOfSale.id,
-    dateTime = proofOfSale.dateTime,
-    saleValue = proofOfSale.value,
-    paymentOptions = proofOfSale.paymentOptions,
-    products = proofOfSale.voucherProduct.stream()
-        .map { product: VoucherProduct -> VoucherProductView(product) }.collect(Collectors.toList())
-)
+        id = proofOfSale.id,
+        dateTime = proofOfSale.dateTime,
+        saleValue = proofOfSale.value,
+        paymentOptions = proofOfSale.paymentOptions,
+        products = proofOfSale.voucherProduct.stream()
+            .map { product: VoucherProduct -> VoucherProductView(product) }.collect(Collectors.toList())
+    )
 }
