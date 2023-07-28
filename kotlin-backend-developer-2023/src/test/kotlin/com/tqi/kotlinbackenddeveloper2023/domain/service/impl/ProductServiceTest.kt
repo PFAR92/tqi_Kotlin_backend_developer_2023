@@ -3,9 +3,8 @@ package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
-import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.product.ProductRepository
-import com.tqi.kotlinbackenddeveloper2023.domain.service.CategoryService
+import com.tqi.kotlinbackenddeveloper2023.domain.service.category.CategoryService
 import com.tqi.kotlinbackenddeveloper2023.domain.service.product.impl.ProductService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -80,7 +79,7 @@ class ProductServiceTest {
     fun `alteration should return updated product`() {
 
         val updatedProduct = buildProduct().copy(
-            unitOfMeasure = UnitOfMeasure.CAIXA,
+            unitOfMeasure = Product.UnitOfMeasure.CAIXA,
             unitPrice = BigDecimal.valueOf(21)
         )
 
@@ -196,7 +195,7 @@ class ProductServiceTest {
     private fun buildProduct(
         id: Long = 1L,
         name: String = "Coca Cola",
-        unitOfMeasure: UnitOfMeasure = UnitOfMeasure.UNIDADE,
+        unitOfMeasure: Product.UnitOfMeasure = Product.UnitOfMeasure.UNIDADE,
         unitPrice: BigDecimal = BigDecimal.valueOf(7.50),
         category: Category = Category(
             1L,

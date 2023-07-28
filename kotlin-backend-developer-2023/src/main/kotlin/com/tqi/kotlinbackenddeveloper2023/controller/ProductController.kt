@@ -1,6 +1,7 @@
 package com.tqi.kotlinbackenddeveloper2023.controller
 
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.product.ProductDto
+import com.tqi.kotlinbackenddeveloper2023.controller.dto.product.ProductDtoFindId
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.product.ProductUpdateDto
 import com.tqi.kotlinbackenddeveloper2023.controller.dto.product.ProductView
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
@@ -36,15 +37,15 @@ class ProductController(private val productService: ProductService) {
     }
 
     @GetMapping("/id")
-    fun findByIdProduct(@RequestBody product: Product): ResponseEntity<ProductView> {
+    fun findByIdProduct(@RequestBody product: ProductDtoFindId): ResponseEntity<ProductView> {
         val findProduct = productService.findById(product.id)
         return ResponseEntity.status(HttpStatus.OK).body(ProductView(findProduct))
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteProduct(@RequestBody product: Product) {
-        productService.delete(product)
+    fun deleteProduct(@RequestBody product: ProductDtoFindId) {
+        productService.delete(product.toEntity())
     }
 
 }

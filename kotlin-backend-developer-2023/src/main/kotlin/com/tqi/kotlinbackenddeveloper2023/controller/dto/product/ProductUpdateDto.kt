@@ -2,7 +2,6 @@ package com.tqi.kotlinbackenddeveloper2023.controller.dto.product
 
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
-import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
 import jakarta.validation.constraints.*
 import java.math.BigDecimal
 
@@ -29,7 +28,7 @@ data class ProductUpdateDto(
     fun toEntity() = Product(
         id = this.id,
         name = this.name,
-        unitOfMeasure = UnitOfMeasure.valueOf(this.unitOfMeasure),
+        unitOfMeasure = Product.UnitOfMeasure.valueOf(this.unitOfMeasure),
         unitPrice = this.unitPrice,
         category = Category(name = this.category)
     )

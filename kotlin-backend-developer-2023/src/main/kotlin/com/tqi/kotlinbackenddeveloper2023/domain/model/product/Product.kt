@@ -20,4 +20,12 @@ data class Product(
     @ManyToOne
     @Embedded
     var category: Category
-)
+) {
+
+    enum class UnitOfMeasure {
+        UNIDADE,
+        QUILOGRAMA,
+        LITRO,
+        CAIXA
+    }
+}

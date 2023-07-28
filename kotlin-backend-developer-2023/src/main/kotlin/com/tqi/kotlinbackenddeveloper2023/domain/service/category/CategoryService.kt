@@ -1,4 +1,4 @@
-package com.tqi.kotlinbackenddeveloper2023.domain.service
+package com.tqi.kotlinbackenddeveloper2023.domain.service.category
 
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.category.CategoryRepository

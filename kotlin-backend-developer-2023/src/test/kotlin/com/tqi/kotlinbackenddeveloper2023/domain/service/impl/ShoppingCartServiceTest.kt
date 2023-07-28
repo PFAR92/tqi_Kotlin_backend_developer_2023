@@ -3,7 +3,6 @@ package com.tqi.kotlinbackenddeveloper2023.domain.service.impl
 import com.tqi.kotlinbackenddeveloper2023.domain.exceptions.BusinessException
 import com.tqi.kotlinbackenddeveloper2023.domain.model.category.Category
 import com.tqi.kotlinbackenddeveloper2023.domain.model.product.Product
-import com.tqi.kotlinbackenddeveloper2023.domain.model.product.UnitOfMeasure
 import com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart.ProductsPlacedInTheCart
 import com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart.ShoppingCart
 import com.tqi.kotlinbackenddeveloper2023.domain.repository.product.ProductRepository
@@ -62,6 +61,13 @@ class ShoppingCartServiceTest {
 
         val productInTheCarSave = shoppingCartService.addProductToCart(productInTheCart)
 
+        var cartValues = BigDecimal.ZERO
+        for (product in productInTheCarSave.listProductsPlacedInTheCart) {
+            cartValues += product.price
+        }
+
+        Assertions.assertEquals(productInTheCarSave.cartValue, cartValues)
+
         verify(productsPlacedInTheCartRepository, times(1)).save(productInTheCart)
         verify(shoppingCartRepository, times(1)).save(productInTheCart.shoppingCart)
 
@@ -71,7 +77,7 @@ class ShoppingCartServiceTest {
     fun `saving a product that is already in the cart should update the quantity and price`() {
 
         val productInTheCart = buildProductInCart()
-        val shoppingCart = buildShoppingCart(1L, mutableListOf(buildProductInCart()))
+        val shoppingCart = buildShoppingCart(1L, BigDecimal.ZERO, mutableListOf(buildProductInCart()))
 
         `when`(shoppingCartRepository.findById(1L)).thenReturn(Optional.of(shoppingCart))
         `when`(productRepository.findByName(buildProductInCart().product.name)).thenReturn(
@@ -129,7 +135,7 @@ class ShoppingCartServiceTest {
     fun `the product quantity is changed when requested and the price is updated`() {
 
         val updateProduct = buildProductInCart(quantity = 5)
-        val shoppingCart = buildShoppingCart(1L, mutableListOf(buildProductInCart()))
+        val shoppingCart = buildShoppingCart(1L, BigDecimal.ZERO, mutableListOf(buildProductInCart()))
 
         `when`(shoppingCartRepository.findById(1L)).thenReturn(Optional.of(shoppingCart))
         `when`(shoppingCartRepository.save(any())).thenReturn(shoppingCart)
@@ -151,7 +157,7 @@ class ShoppingCartServiceTest {
     fun `if the quantity is zero, the product is removed from the cart`() {
 
         val updateProduct = buildProductInCart(quantity = 0)
-        val shoppingCart = buildShoppingCart(1L, mutableListOf(buildProductInCart()))
+        val shoppingCart = buildShoppingCart(1L, BigDecimal.ZERO, mutableListOf(buildProductInCart()))
 
         `when`(shoppingCartRepository.findById(1L)).thenReturn(Optional.of(shoppingCart))
         `when`(productRepository.findByName(buildProductInCart().product.name)).thenReturn(
@@ -196,9 +202,9 @@ class ShoppingCartServiceTest {
 
     private fun buildProductInCart(
         id: Long = 1L,
-        shoppingCart: ShoppingCart = ShoppingCart(1L, mutableListOf<ProductsPlacedInTheCart>()),
+        shoppingCart: ShoppingCart = ShoppingCart(1L, BigDecimal.ZERO, mutableListOf<ProductsPlacedInTheCart>()),
         product: Product = Product(
-            1L, "Coca Cola", UnitOfMeasure.UNIDADE, BigDecimal.valueOf(7.50), Category(1L, "Bebidas")
+            1L, "Coca Cola", Product.UnitOfMeasure.UNIDADE, BigDecimal.valueOf(7.50), Category(1L, "Bebidas")
         ),
         quantity: Int = 2,
         price: BigDecimal = BigDecimal.valueOf(15.00)
@@ -212,9 +218,11 @@ class ShoppingCartServiceTest {
 
     private fun buildShoppingCart(
         id: Long = 1L,
+        cartValues: BigDecimal = BigDecimal.ZERO,
         listProductsPlacedInTheCart: MutableList<ProductsPlacedInTheCart> = mutableListOf(),
     ) = ShoppingCart(
         id = id,
+        cartValue = cartValues,
         listProductsPlacedInTheCart = listProductsPlacedInTheCart
     )
 

@@ -5,9 +5,11 @@ import com.tqi.kotlinbackenddeveloper2023.domain.model.shoppingCart.ShoppingCart
 import java.util.stream.Collectors
 
 data class ShoppingCartView(
+    var cartValue: String,
     var listProductsPlacedInTheCart: MutableList<ProductsPlacedInTheCartView>
 ) {
     constructor(shoppingCart: ShoppingCart) : this(
+        cartValue = "R$${shoppingCart.cartValue}",
         listProductsPlacedInTheCart = shoppingCart.listProductsPlacedInTheCart.stream()
             .map { product: ProductsPlacedInTheCart ->
                 ProductsPlacedInTheCartView(
