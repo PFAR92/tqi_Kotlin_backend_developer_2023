@@ -62,14 +62,14 @@ class ProductService(
         }
     }
 
-    override fun delete(product: Product) {
-        if (productRepository.existsById(product.id)) {
-            val deleteProduct = productRepository.findById(product.id)
+    override fun delete(id: Long) {
+        if (productRepository.existsById(id)) {
+            val deleteProduct = productRepository.findById(id)
             productRepository.delete(deleteProduct.get())
             categoryService.delete(deleteProduct.get().category)
 
         } else {
-            throw BusinessException("id ${product.id} not found")
+            throw BusinessException("id $id not found")
         }
     }
 }
