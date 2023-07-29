@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -16,24 +17,24 @@ import java.util.stream.Collectors
 
 @RestController
 @RequestMapping("product")
-@Tag(name = "Produtos", description = "Endpoints para gerenciar os produtos do estoque")
+@Tag(name = "Products", description = "Endpoints to manage inventory products")
 class ProductController(private val productService: ProductService) {
 
-    @Operation(summary = "adicionar produto", description = "endpoint para cadastrar um novo produto ao estoque")
+    @Operation(summary = "add product", description = "endpoint to add a new product to stock")
     @PostMapping
     fun saveProduct(@RequestBody @Valid productDto: ProductDto): ResponseEntity<ProductView> {
         val savedProduct = productService.save(productDto.toEntity())
         return ResponseEntity.status(HttpStatus.CREATED).body(ProductView(savedProduct))
     }
 
-    @Operation(summary = "alterar produto", description = "endpoint para alterar um produto do estoque")
+    @Operation(summary = "change product", description = "endpoint to change a product from stock")
     @PutMapping
     fun alterationProduct(@RequestBody @Valid productUpdateDto: ProductUpdateDto): ResponseEntity<ProductView> {
         val updatedProduct = productService.alteration(productUpdateDto.toEntity())
         return ResponseEntity.status(HttpStatus.OK).body(ProductView(updatedProduct))
     }
 
-    @Operation(summary = "informações dos produtos", description = "endpoint para ver todos os produtos cadastrados")
+    @Operation(summary = "information of all products", description = "endpoint to see all registered products")
     @GetMapping
     fun findAllProducts(): ResponseEntity<List<ProductView>> {
         val listProduct = this.productService.findAll().stream()
@@ -42,14 +43,14 @@ class ProductController(private val productService: ProductService) {
         return ResponseEntity.status(HttpStatus.OK).body(listProduct)
     }
 
-    @Operation(summary = "informação de um produto", description = "endpoint para buscar informação de um produto específico")
+    @Operation(summary = "product information", description = "endpoint to fetch information for a specific product")
     @GetMapping("/{id}")
     fun findByIdProduct(@PathVariable id: Long): ResponseEntity<ProductView> {
         val findProduct = productService.findById(id)
         return ResponseEntity.status(HttpStatus.OK).body(ProductView(findProduct))
     }
 
-    @Operation(summary = "excluir produto", description = "endpoint para excluir um produto do estoque")
+    @Operation(summary = "delete product", description = "endpoint to delete a product from stock")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProduct(@PathVariable id: Long) {
