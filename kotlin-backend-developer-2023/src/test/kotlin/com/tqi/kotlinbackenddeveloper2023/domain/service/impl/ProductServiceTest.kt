@@ -169,7 +169,7 @@ class ProductServiceTest {
         `when`(productRepository.existsById(1L)).thenReturn(false)
 
         val exception = Assertions.assertThrows(BusinessException::class.java) {
-            productService.delete(buildProduct())
+            productService.delete(buildProduct().id)
         }
         val expectedMessage = "id 1 not found"
 
@@ -184,7 +184,7 @@ class ProductServiceTest {
         `when`(productRepository.existsById(1L)).thenReturn(true)
         `when`(productRepository.findById(1L)).thenReturn(Optional.of(buildProduct()))
 
-        productService.delete(buildProduct())
+        productService.delete(buildProduct().id)
 
         verify(productRepository, times(1)).existsById(1L)
         verify(productRepository, times(1)).findById(1L)

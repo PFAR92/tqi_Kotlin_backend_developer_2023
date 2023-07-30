@@ -8,5 +8,5 @@ interface IProductService {
     fun alteration(product: Product): Product
     fun findAll(): List<Product>
     fun findById(id: Long): Product
-    fun delete(product: Product)
+    fun delete(id: Long)
 }
