@@ -9,7 +9,6 @@ import org.springframework.test.context.TestPropertySource
 @TestPropertySource(locations = ["classpath:test.properties"])
 class KotlinBackendDeveloper2023ApplicationTests {
 
-
     @Test
     fun contextLoads() {
     }
